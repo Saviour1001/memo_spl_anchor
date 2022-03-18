@@ -1,8 +1,5 @@
 const anchor = require("@project-serum/anchor");
-const utf8 = require("utf8");
-const emojiUnicode = require("emoji-unicode");
 const assert = require("assert");
-const bs58 = require("bs58");
 
 describe("markTwo", () => {
   // Configure the client to use the local cluster.
@@ -14,6 +11,7 @@ describe("markTwo", () => {
     var codedString = Buffer.from(string);
 
     const tx = await program.rpc.buildMemo(codedString);
+    console.log("Transaction Signature:", tx);
   });
 
   it("Test 2 => Asserting Emojis and Bytes", async () => {
@@ -24,6 +22,8 @@ describe("markTwo", () => {
     const tx1 = await program.rpc.buildMemo(Buffer.from("🐆"));
 
     const tx2 = await program.rpc.buildMemo(Buffer.from(bytes));
+    console.log("Transaction Signature One:", tx1);
+    console.log("Transaction Signature Two:", tx2);
   });
 
   it("Test 3 => Sending Signed Transaction", async () => {
@@ -40,9 +40,10 @@ describe("markTwo", () => {
       ],
       signers: [pubkey1, pubkey2, pubkey3],
     });
+    console.log("Transaction Signature:", tx);
   });
 
-  it("Test 4 => Sending Signed Transaction with a Memo", async () => {
+  it("Test 4 => Sending Unsigned Transaction with a Memo", async () => {
     // This test should fail because the transaction is not signed.
     const pubkey1 = anchor.web3.Keypair.generate();
     const pubkey2 = anchor.web3.Keypair.generate();
@@ -59,10 +60,12 @@ describe("markTwo", () => {
         signers: [pubkey1, pubkey2, pubkey3],
       });
     }, new Error("unknown signer"));
+
+    console.log("Test failed successfully :)");
   });
 
   it("Test 5 => Sending a transaction with missing signers", async () => {
-    // This test should fail because the transaction is not signed.
+    // This test should fail because the transaction is not signed completely.
     const pubkey1 = anchor.web3.Keypair.generate();
     const pubkey2 = anchor.web3.Keypair.generate();
     const pubkey3 = anchor.web3.Keypair.generate();
@@ -78,18 +81,18 @@ describe("markTwo", () => {
         signers: [pubkey1, pubkey2, pubkey3],
       });
     }, new Error("unknown signer"));
+    console.log("Test failed successfully :)");
   });
 
   it("Test 6 => Testing invalid input", async () => {
+    // This test should fail because the input is invalid.
     let invalid_utf8 = Uint8Array.from([
       0xf0, 0x9f, 0x90, 0x86, 0xf0, 0x9f, 0xff, 0x86,
     ]);
 
-    // assert.throws(() => {
-    //   program.rpc.buildMemo(Buffer.from(invalid_utf8));
-    // }, new Error());
-
-    const tx1 = await program.rpc.buildMemo(Buffer.from(invalid_utf8));
-    console.log("Your transaction signature", tx1);
+    assert.rejects(() => {
+      program.rpc.buildMemo(Buffer.from(invalid_utf8));
+    }, new Error());
+    console.log("Test failed successfully :)");
   });
 });

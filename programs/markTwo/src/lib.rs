@@ -1,12 +1,12 @@
 use anchor_lang::prelude::*;
 
-declare_id!("93iacsFnFj4G7ae1psGCRGzA2XmQSAJ7bFBVchxZ5qFL");
+declare_id!("4q4avaGPBzJtwv6YsZVaocbmHwMgnzc95ty7uja6uzrV");
 
 #[program]
 pub mod mark_two {
     use super::*;
-    // use std::str;
-    pub fn build_memo(ctx: Context<BuildMemo>, input:Vec<u8>) -> Result<()> {
+    use std::str;
+    pub fn build_memo(ctx: Context<BuildMemo>,input:Vec<u8>) -> Result<()> {
 
         msg!("Initializing");
 
@@ -25,18 +25,11 @@ pub mod mark_two {
             return err!(MyError::MissingRequiredSignature);
         }
 
-
-        // let unwrapped_input = str::from_utf8(&input).map_err(|err| {
-        //     msg!("Invalid UTF-8, from bytes: {:?}", err);
-        //     ProgramError::InvalidInstructionData
-        // })?;
-
-    //     let memo = str::from_utf8(input).map_err(|err| {
-    //     msg!("Invalid UTF-8, from byte {}", err.valid_up_to());
-    //     ProgramError::InvalidInstructionData
-    // })?;
-    // msg!("Memo (len {}): {:?}", unwrapped_input.len() , unwrapped_input);
-        msg!("Memo (len {}): {:?}", input.len() , input);
+        let memo = str::from_utf8(&input).map_err(|err| {
+            msg!("Invalid UTF-8, from bytes: {:?}", err);
+            ProgramError::InvalidInstructionData
+        })?;
+        msg!("Memo (len {}): {:?}", memo.len(), memo);
         Ok(())
     }
 
@@ -46,7 +39,6 @@ pub mod mark_two {
 pub struct BuildMemo<> {
 
 }
-
 
 
 #[error_code]

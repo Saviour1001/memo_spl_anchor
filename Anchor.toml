@@ -1,7 +1,7 @@
 [features]
 seeds = false
 [programs.localnet]
-mark_two = "93iacsFnFj4G7ae1psGCRGzA2XmQSAJ7bFBVchxZ5qFL"
+mark_two = "4q4avaGPBzJtwv6YsZVaocbmHwMgnzc95ty7uja6uzrV"
 
 [registry]
 url = "https://anchor.projectserum.com"
